@@ -28,7 +28,7 @@ for the output using its completion_id
 
 You can access the completion_id for the first choice in a chat response as follows:
 <CodeGroup>
-```bash requests
+```python requests
 completion_id = response.json()["choices"][0]["completion_id"]
 ```
 
@@ -62,12 +62,13 @@ completion_text = response.choices[0].message.content
 Then, you can log your direct feedback.
 
 <CodeGroup>
-```python requestsimport requests
+```python requests
+import requests
 
 headers = {"Authorization": "Bearer ADAPTIVE_API_KEY"}
 payload = { 
-    "value": float|bool,
-"metric": "METRIC_KEY",
+  "value": float|bool,
+  "metric": "METRIC_KEY",
   "completion_id" : "COMPLETION_ID"
 }
 
@@ -90,3 +91,6 @@ response = client.add_feedback(
 )
 ```
 </CodeGroup>
+
+If you want to log textual feedback along with its value, you can pass it as the `details` input parameter.
+See [Direct feedback API reference](/api-reference/feedback/post-apiv1feedback) for more information.
