@@ -54,8 +54,8 @@ response = client.chat(
 from openai import Client
 
 response = oai_client.chat.completions.create(
-	messages=[{"role":"user", "content":"Hello model!"}],
-	model="USE_CASE_KEY/optional[MODEL_KEY]",
+  messages=[{"role":"user", "content":"Hello model!"}],
+  model="USE_CASE_KEY/optional[MODEL_KEY]",
   extra_body={"labels":{"label_name":"label_value"}}
 )
 ```
