@@ -1,0 +1,29 @@
+---
+title: 'Authentication'
+description: 'Authenticate your requests to Adaptive Engine'
+---
+
+The Adaptive API uses API keys for authentication. All API requests should include your API key in an `Authorization` HTTP Header as such:
+```
+Authorization: Bearer ADAPTIVE_API_KEY
+```
+The Adaptive Python SDK allows you configure your API key on instantiation of the Adaptive client, as such:
+
+```Python Python
+from adaptive_sdk import Adaptive
+
+client = Adaptive(base_url="ADAPTIVE_URL", api_key="ADAPTIVE_API_KEY")
+```
+
+You can also set an environment variable `$ADAPTIVE_API_KEY` instead of explicitly passing it to the Adaptive client.
+
+If you are using the OpenAI Python library to [make inference requests](/get-started/inference), you can configure the OpenAI Client as such:
+
+```Python Python
+from openai import Client
+
+oai_client = Client(
+       base_url="ADAPTIVE_URL/api/v1",
+    	api_key="ADAPTIVE_API_KEY",
+)
+```

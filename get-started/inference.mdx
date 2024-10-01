@@ -1,0 +1,84 @@
+---
+title: 'Make inference requests'
+description: 'Get completions from models deployed on Adaptive'
+---
+You can run inference for a target use-case (and optionally model) directly through HTTP requests, via the Adaptive Python SDK, or the OpenAI Python library.
+The Adaptive SDK adopts a messages format similar to OpenAI’s Python library.
+
+The model parameter can be of the form `{use_case_key}/{model_key}` or simply `{use_case_key}`.
+In the latter case, your request will be routed to the model you’ve defined as the default for the use case, or one of the models included in an active A/B test.
+
+<CodeGroup>
+```bash curl
+curl "$ADAPTIVE_URL/api/v1/chat/completions" \
+  -X POST \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer $ADAPTIVE_API_KEY" \
+  -d '{
+     "model": "USE_CASE_KEY/optional[MODEL_KEY]",
+     "messages": [{"role": "user", "content": "Hello model!"}],
+     "labels": {"label_name": "label_value"}
+  }'
+```
+
+```python requests
+import requests 
+
+headers = {"Authorization": "Bearer ADAPTIVE_API_KEY"}
+payload = { 
+  "model": "internal-assistant",
+  "messages": [{"role": "user", "content": "Hello model!"}],
+  "labels": {"label_name": "label_value"}
+}
+
+response = requests.post(
+  url="ADAPTIVE_URL/api/v1/chat/completions",
+  json=payload,
+  headers=headers
+)
+```
+
+```python Adaptive SDK
+from adaptive_sdk.types import ChatTurn, ChatRequest
+
+response = client.chat(
+  ChatInput(
+    messages=[ChatTurn(role="user", content="Hello model!")],
+    model="USE_CASE_KEY/optional[MODEL_KEY]",
+    labels={"label_name": "label_value"}
+  )
+)
+```
+
+```python OpenAI Python
+from openai import Client
+
+response = oai_client.chat.completions.create(
+	messages=[{"role":"user", "content":"Hello model!"}],
+	model="USE_CASE_KEY/optional[MODEL_KEY]",
+  extra_body={"labels":{"label_name":"label_value"}}
+)
+```
+</CodeGroup>
+
+
+You can tag/label individual requests by passing in a dictionary of key-value pairs as `labels`,
+as you can see in the code snippets above. If you use the OpenAI Python library, you have to pass labels
+within the `extra_body`. 
+
+Although the OpenAI Python library can be used to make inference requests to your Adaptive deployment,
+not all of Adaptive Engine’s input parameters are supported by OpenAI’s library and vice-versa.
+See [Chat API Reference](/api-reference/completions/post-apiv1chatcompletions) for a list of supported parameters.
+
+ 
+Both the Adaptive SDK’s and OpenAI Python library’s responses are Pydantic Models, which help with autocompletion within your editor. 
+You can access the model’s response text with:
+<CodeGroup>
+```python requests
+completion_text = response.json()["choices"][0]["message"]["content"]
+```
+
+```python Adaptive SDK / OpenAI Python
+completion_text = response.choices[0].message.content
+```
+</CodeGroup>
