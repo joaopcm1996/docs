@@ -37,7 +37,7 @@ headers = {"Authorization": "Bearer ADAPTIVE_API_KEY"}
 payload = { 
   "value": 5,
   "metric": "CSAT",
-  "completion_id" : "COMPLETION_ID"
+  "completion_id" : completion_id
 }
 
 response = requests.post(
@@ -54,7 +54,7 @@ response = client.add_feedback(
 	AddFeedbackRequest(
 	  value=5,
 	  metric="CSAT",
-	  completion_id="COMPLETION_ID"
+	  completion_id=completion_id
   )
 )
 ```
