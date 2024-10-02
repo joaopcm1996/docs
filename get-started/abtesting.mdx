@@ -3,14 +3,13 @@ title: "A/B test models"
 description: "A/B test selected models on a percentage of live traffic"
 ---
 A/B Tests allow you to evaluate a set of models on a given metric against a percentage of live traffic. When you
-[make an inference request](/get-started/inference) that targets a use case - without specifying a target model,
-the request will be routed to one of the models under evaluation with your configured traffic split probability. 
+[make an inference request](/get-started/inference) for a use case with an active A/B test wihout addressing a specific model,
+it is routed to the test with a probability of `traffic split %`. A/B test requests are then distributed equally among tested models.
+For example, if your configured `traffic split` is 10% and you are A/B testing 2 models, 5% of the full use case traffic will be routed to each model.
 
-A/B Tests can be configured to run on either [comparisons or direct feedbacks](/get-started/feedback#supported-feedback-types). 
 After creating an A/B test, you can start making inference requests and providing feedback on the resulting completions. 
-When enough feedback has been logged to reach statistical significance between the performance of the evaluated models’, the A/B test will complete automatically.
-If you configured your A/B test to run on [comparisons](/get-started/feedback#logging-comparisons), the test results will consist of each model’s win-rate (between 0 and 1).
-If you configured it to run on [direct feedbacks](/get-started/feedback#logging-direct-feedbacks), the results will show the average value for all feedbacks logged for that model in the course of the test.
+When enough feedback has been logged to reach a statistically significant performance difference between the evaluated models’, the A/B test ends automatically.
+The test results will show the average value of feedbacks logged for each model.
 
-If you want to bypass the configured traffic split probability and guarantee your request counts towards the A/B test,
-you can specify the A/B test key in the `ab_campaign` parameter when using the chat api.
+If you want to bypass the configured `traffic split` and guarantee your request counts towards the A/B test,
+you can specify the A/B test key in the `ab_campaign` parameter when using the [Chat API](/get-started/inference).

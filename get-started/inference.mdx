@@ -6,7 +6,7 @@ You can run inference for a target use-case (and optionally model) directly thro
 The Adaptive SDK adopts a messages format similar to OpenAI’s Python library.
 
 The model parameter can be of the form `{use_case_key}/{model_key}` or simply `{use_case_key}`.
-In the latter case, your request will be routed to the model you’ve defined as the default for the use case, or one of the models included in an active A/B test.
+In the latter case, your request will be routed to the model you’ve defined as the default for the use case, or one of the models included in an active [A/B test](/get-started/abtestingnew).
 
 <CodeGroup>
 ```bash curl
@@ -62,9 +62,11 @@ response = oai_client.chat.completions.create(
 </CodeGroup>
 
 
-You can tag/label individual requests by passing in a dictionary of key-value pairs as `labels`,
-as you can see in the code snippets above. If you use the OpenAI Python library, you have to pass labels
-within the `extra_body`. 
+You can optionally tag requests with labels, as illustrated above.
+Labels are useful to organize and categorize completions.
+The `labels` parameter is a dictionary of user-defined key-value pairs, for example `labels = {"project": "RAG Bot", "topic": "Industrial Tools"}`.
+If you are using the OpenAI Python library, pass your labels in `extra_body`. 
+
 
 Although the OpenAI Python library can be used to make inference requests to your Adaptive deployment,
 not all of Adaptive Engine’s input parameters are supported by OpenAI’s library and vice-versa.
