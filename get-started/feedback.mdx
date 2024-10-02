@@ -1,6 +1,6 @@
 ---
-title: 'Submit feedback on completions'
-description: 'Log your feedback on completions of different models'
+title: "Submit feedback"
+description: "Log your feedback for outputs of different models"
 ---
 You can easily log your feedback about different model's outputs to Adaptive Engine,
 so you can later use it to improve your models.
@@ -20,13 +20,13 @@ feedback must be associated with a metric. For example, you can log that Llama3.
 
 When you make an inference request, the API response includes a `completion_id` UUID along with the
 model’s output (see [Make inference requests](/get-started/inference) to learn more). You must log your feedback
-for the output using its completion_id
+for an output using its completion_id.
 
 <Warning>
   Make sure to use the response’s `completion_id` for logging, not its `id`
 </Warning>
 
-You can access the completion_id for the first choice in a chat response as follows:
+You can access the completion_id for a Chat API response as follows:
 <CodeGroup>
 ```python requests
 completion_id = response.json()["choices"][0]["completion_id"]
@@ -34,28 +34,6 @@ completion_id = response.json()["choices"][0]["completion_id"]
 
 ```python Adaptive SDK / OpenAI Python
 completion_id = response.choices[0].completion_id
-```
-</CodeGroup>
-
-
-You can tag/label individual requests by passing in a dictionary of key-value pairs as `labels`,
-as you can see in the code snippets above. If you use the OpenAI Python library, you have to pass labels
-within the `extra_body`. 
-
-Although the OpenAI Python library can be used to make inference requests to your Adaptive deployment,
-not all of Adaptive Engine’s input parameters are supported by OpenAI’s library and vice-versa.
-See [Chat API Reference](/api-reference/completions/post-apiv1chatcompletions) for a list of supported parameters.
-
- 
-Both the Adaptive SDK’s and OpenAI Python library’s responses are Pydantic Models, which help with autocompletion within your editor. 
-You can access the model’s response text with:
-<CodeGroup>
-```python requests
-completion_text = response.json()["choices"][0]["message"]["content"]
-```
-
-```python Adaptive SDK / OpenAI Python
-completion_text = response.choices[0].message.content
 ```
 </CodeGroup>
 
@@ -92,5 +70,54 @@ response = client.add_feedback(
 ```
 </CodeGroup>
 
-If you want to log textual feedback along with its value, you can pass it as the `details` input parameter.
+If you want to log clarifying textual feedback along with its scalar/boolean value, you can pass it in the `details` input parameter.
 See [Direct feedback API reference](/api-reference/feedback/post-apiv1feedback) for more information.
+
+
+## Logging comparisons
+You can log a comparison between two completions that were executed by Adaptive Engine using their completion id’s
+, or log a comparison between two strings directly. In the latter case, you are required to log the prompt that was used as well.
+
+<CodeGroup>
+```python requests
+import requests
+
+headers = {"Authorization": "Bearer ADAPTIVE_API_KEY"}
+
+payload_w_id = { 
+  "metric": "METRIC_KEY",
+  "preferred_completion" : "PREFERRED_COMPLETION_ID",
+  "other_completion": "OTHER_COMPLETION_ID",
+}
+payload_w_str = {
+  "metric": "METRIC_KEY",
+  "preferred_completion" : "PREFERRED_COMPLETION_STR",
+  "other_completion": "OTHER_COMPLETION_STR",
+  "prompt": "PROMPT_STR"
+}
+
+response = requests.post(
+  url="ADAPTIVE_URL/api/v1/comparison",
+  json=payload_w_id|payload_w_str,
+  headers=headers
+)
+```
+
+```python Adaptive SDK
+from adaptive_sdk.types import AddComparisonRequest
+
+payload_w_id = AddComparisonRequest(
+  metric="METRIC_KEY",
+  preferred_completion="PREFERRED_COMPLETION_ID",
+  other_completion="OTHER_COMPLETION_ID"
+)
+
+payload_w_str = AddComparisonRequest(
+  metric="METRIC_KEY",
+  preferred_completion="PREFERRED_COMPLETION_ID",
+  other_completion="OTHER_COMPLETION_ID"
+)
+
+response = client.add_comparison(payload_w_id|payload_w_str)
+```
+</CodeGroup>

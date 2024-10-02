@@ -42,7 +42,8 @@
       "pages": [
         "get-started/authentication",
         "get-started/inference",
-        "get-started/feedback"
+        "get-started/feedback",
+        "get-started/abtesting"
       ]
     }
   ],
